@@ -19,7 +19,7 @@ class Mapp extends React.Component {
       navigator.geolocation.getCurrentPosition((position) => {
         const map = new mapboxgl.Map({
           accessToken:
-            "pk.eyJ1Ijoia2lyaXRveDEyMyIsImEiOiJjazdqdHg0bjcwendqM2xxazN2d3A2Z2w1In0.KAPj1fSodUGpUtvgvy3yOA ",
+            process.env.REACT_API_KEY_MAPBOX,
           container: this.mapContainer,
           style: "mapbox://styles/mapbox/streets-v11",
           center: [position.coords.longitude, position.coords.latitude],
