@@ -1,6 +1,8 @@
 import React from "react";
 import mapboxgl from "mapbox-gl";
-import chargerIcon from "./assets/icons8-car-charger-48.png";
+import chargerIconRegular from "./assets/level2_operational_icon.png";
+import chargerIconTesla from "./assets/level3_operational_icon.png";
+import chargerIconPrivate from "./assets//level2_private_icon.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 require("dotenv").config();
 
@@ -18,8 +20,7 @@ class Mapp extends React.Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const map = new mapboxgl.Map({
-          accessToken:
-            process.env.REACT_API_KEY_MAPBOX,
+          accessToken:process.env.REACT_API_KEY_MAPBOX,,
           container: this.mapContainer,
           style: "mapbox://styles/mapbox/streets-v11",
           center: [position.coords.longitude, position.coords.latitude],
@@ -52,7 +53,14 @@ class Mapp extends React.Component {
               //console.log(location.AddressInfo);
               var el = document.createElement("div");
               el.className = "marker";
-              el.style.backgroundImage = "url(" + chargerIcon + ")";
+
+              if (location.Connections[0].ConnectionTypeID === 30) {
+                el.style.backgroundImage = "url(" + chargerIconPrivate + ")";
+              } else if (location.Connections[0].ConnectionTypeID === 1) {
+                el.style.backgroundImage = "url(" + chargerIconRegular + ")";
+              } else {
+                el.style.backgroundImage = "url(" + chargerIconTesla + ")";
+              }
 
               new mapboxgl.Marker(el)
                 .setLngLat([
@@ -67,11 +75,57 @@ class Mapp extends React.Component {
                       `<div class="text-secondary">OCM-` +
                       location.ID +
                       `<br>` +
+                      location.Connections[0].ConnectionType.Title +
+                      `<br>` +
+                      location.AddressInfo.Title +
                       `</div></h6>
                     <div class="card-body">
-                      <h5 class="card-title">Special title treatment</h5>
-                      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                      <h6 style="font-weight: bold;" >Location Details</h6>
+                      <p class="card-text row"><span class="col-sm-6 mt-3">` +
+                      location.AddressInfo.AddressLine1 +
+                      `<br>` +
+                      location.AddressInfo.Town +
+                      `<br>` +
+                      location.AddressInfo.Country.Title +
+                      `<br>` +
+                      location.AddressInfo.StateOrProvince +
+                      `<br>` +
+                      location.AddressInfo.Postcode +
+                      `</span><span class="col-sm-6">` +
+                      location.AddressInfo.AccessComments +
+                      `<br>` +
+                      location.AddressInfo.ContactTelephone1 +
+                      `<br><a href="` +
+                      location.AddressInfo.RelatedURL +
+                      `">location.AddressInfo.RelatedURL</a>` +
+                      `
+                      </span></p>
+                      <hr>
+                      <div>
+                      <h6 style="font-weight: bold;">Equipment Details</h6>
+                      <div class="row">
+                      <div class="col-sm-12">
+                      <span>Usage Cost:` +
+                      location.UsageCost +
+                      `</span>
+                      </div>
+                      </div>
+                      </div>
+                      <hr>
+                      <div>
+                      <h6 style="font-weight: bold;"> Additional Information
+                      Data Provide</h6>
+                      <div class="row">
+                      <div class="col-sm-12">
+                      <span>Usage Cost:` +
+                      location.DataProvider.Title +
+                      `<br><a href="` +
+                      location.DataProvider.WebsiteURL +
+                      `">location.AddressInfo.RelatedURL</a>` +
+                      `</span>
+                      </div>
+                      </div>
+                      </div>
                     </div>
                   </div>`
                   )
